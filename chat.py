@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-chat.py — Interactive CLI client for the Qwen3.6 LLM server on Kaggle
+chat.py — Interactive CLI client for the Huihui Qwen3.8 27B server on Kaggle
 
 Usage:
     python chat.py --url https://xxxx.trycloudflare.com
@@ -92,8 +92,8 @@ def main():
     )
     parser.add_argument(
         "--model",
-        default="qwen3.6-35b-a3b",
-        help="Model alias to use (default: qwen3.6-35b-a3b)",
+        default="huihui-qwen3.8-27b-abliterated",
+        help="Model alias to use (default: huihui-qwen3.8-27b-abliterated)",
     )
     parser.add_argument(
         "--thinking",
@@ -213,7 +213,7 @@ def main():
                 extra_body = {
                     # Thinking mode per request — no server restart needed
                     "chat_template_kwargs": {"enable_thinking": args.thinking},
-                    # Adjust sampling params per Unsloth recommendations
+                    # Starting sampling settings; tune for your workload
                     # thinking=True  → temp 1.0, top_p 0.95 (more creative reasoning)
                     # thinking=False → temp 0.7, top_p 0.8  (focused direct answers)
                     "temperature": 1.0 if args.thinking else 0.7,
