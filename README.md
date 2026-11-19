@@ -69,7 +69,7 @@ This repository does not supply a prebuilt public Kaggle dataset for the selecte
 2. Import **`2_run_server.ipynb`** and select **GPU T4 ×2**, **Internet ON**.
 3. Choose **Add Input / Add data → Your Datasets** and attach **`<your-kaggle-username>/llama-cpp-bin`** created in step 1. Select its newest version after rebuilding. No other author's public binaries are assumed compatible.
 4. Leave `DOWNLOAD_IF_MISSING = True`. With no model dataset attached, the server downloads `Huihui-Qwen3.8-27B-abliterated-UD-DW-Q4_K_M.gguf` and `mmproj-model-bf16.gguf` to `/kaggle/working/huihui-qwen38-27b/` at the pinned revision. Allow about **17.48 GB** plus overhead and check free disk space.
-5. Run the notebook and copy the tunnel URL when the health check succeeds.
+5. Run the notebook. **Cell 2b installs CUDA 12 runtime packages** (`nvidia-cuda-runtime-cu12`, `nvidia-cublas-cu12`), locates their shared libraries and verifies loading before the binary sanity check. The library paths are retained for the server process. Copy the tunnel URL when the health check succeeds.
 
 `KAGGLE_USERNAME` can stay empty in the **server** notebook if attached inputs are unambiguous. Setup notebooks need it to create datasets. Your Kaggle username may differ from your GitHub username.
 
@@ -344,6 +344,10 @@ Re-run `1b_setup_llama.ipynb`. Cell 4 detects the existing dataset and creates a
 ---
 
 ## Troubleshooting
+
+**`libcudart.so.12` / `libcublas.so.12` not found**
+
+Use the updated `2_run_server.ipynb` and run **Cell 2b — Install CUDA 12 runtime dependencies** before loading/checking the binaries in Cell 3. Keep Internet ON for package installation. The cell adds NVIDIA site-package library directories and `/kaggle/working` to `LD_LIBRARY_PATH`, retains existing driver/system paths and verifies loading in a fresh subprocess. Rerun it in each fresh Kaggle session. If it fails, inspect its pip or loader error; it will not report success when required libraries are missing. This supplies the CUDA 12 user-space runtime, not a replacement GPU driver or runtime for other CUDA major versions.
 
 **Binaries missing, unsupported flags, architecture or tensor types**
 
